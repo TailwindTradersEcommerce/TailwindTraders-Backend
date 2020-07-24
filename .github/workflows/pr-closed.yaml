@@ -23,13 +23,12 @@ jobs:
           AKS_CLUSTER=$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)
           echo "::set-env name=AKS_CLUSTER::$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)"
 
-      - name: Create valid release-name
-        id: generate-release-name
+      - name: Create valid branch name
+        id: generate-valid-branch-name
         run: |
-          release=cart-$GITHUB_HEAD_REF
-          release=${release::53}
-          release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
-          echo ::set-output name=result::$release
+          branch=${GITHUB_HEAD_REF::63}        
+          branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+          echo ::set-output name=result::$branch
 
       - uses: azure/aks-set-context@v1
         with:
@@ -38,4 +37,4 @@ jobs:
           resource-group: ${{ env.resourceGroup }}
 
       - name: Cleanup pr version
-        run: helm uninstall -n ${{ env.nameSpace }} ${{steps.generate-release-name.outputs.result}}
+        run: helm uninstall -n ${{ env.nameSpace }} ${{steps.generate-valid-branch-name.outputs.result}}
