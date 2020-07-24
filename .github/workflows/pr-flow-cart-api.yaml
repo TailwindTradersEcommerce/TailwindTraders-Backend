@@ -10,6 +10,7 @@ on:
 env:
   # azure
   resourceGroup: ado30jd
+  nameSpace: twt
 
   # helmchart
   tailwindChartValuesScript: Deploy/helm-values/generate-config.ps1
@@ -89,7 +90,7 @@ jobs:
 
       - name: Helm Install PR
         run: |
-          helm upgrade --install --namespace  ${{ secrets.MASTER_SPACE }} ${{steps.generate-release-name.outputs.result}} \
+          helm upgrade --install --namespace  ${{ env.nameSpace }} ${{steps.generate-release-name.outputs.result}} \
           -f $tailwindChartValues \
           --set ingress.hosts={$INGRESS} \
           --set image.repository=$CONTAINER_REGISTRY/cart.api \
@@ -102,10 +103,9 @@ jobs:
 
       - name: Add routing labels
         run: |
-          kubectl label pods --selector="app=tailwindtraders-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-from=${{steps.generate-release-name.outputs.result}}-tailwindtraders-cart -n ${{ secrets.MASTER_SPACE }} --overwrite=true
+          kubectl label pods --selector="app=tailwindtraders-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-from=${{steps.generate-release-name.outputs.result}}-tailwindtraders-cart -n ${{ env.nameSpace }} --overwrite=true
 
-          #try ingress
-          kubectl annotate pods --selector="app=tailwindtraders-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-on-header=kubernetes-route-as=${{steps.generate-valid-branch-name.outputs.result}} -n ${{ secrets.MASTER_SPACE }} --overwrite=true
+          kubectl annotate pods --selector="app=tailwindtraders-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-on-header=kubernetes-route-as=${{steps.generate-valid-branch-name.outputs.result}} -n ${{ env.nameSpace }} --overwrite=true
 
       - uses: jldeen/dev-spaces/actions/add-review-url@Releases/v2
         with:
