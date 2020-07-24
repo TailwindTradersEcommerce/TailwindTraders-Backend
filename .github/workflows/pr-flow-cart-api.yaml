@@ -115,6 +115,6 @@ jobs:
       - uses: jldeen/dev-spaces/actions/add-review-url@Releases/v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          host: ${INGRESS}
+          host: "${{ env.INGRESS }}"
           main-namespace: ${{steps.generate-valid-branch-name.outputs.result}}
           protocol: "http"
