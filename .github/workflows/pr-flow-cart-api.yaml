@@ -87,18 +87,11 @@ jobs:
           release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
           echo ::set-output name=result::$release
 
-      - name: Create valid ingress hostname
-        id: generate-ingress-hostname
-        run: |
-          ingressHostname=${{steps.generate-valid-release-name.outputs.result}}.{$INGRESS}
-          echo $ingressHosthame
-          echo "::set-env name=HOST::$ingressHostname"
-
       - name: Helm Install PR
         run: |
           helm upgrade --install --namespace  ${{ secrets.MASTER_SPACE }} ${{steps.generate-release-name.outputs.result}} \
           -f $tailwindChartValues \
-          --set ingress.hosts=${{ env.ingressHostname }} \
+          --set ingress.hosts={$INGRESS} \
           --set image.repository=$CONTAINER_REGISTRY/cart.api \
           --set image.tag=$GITHUB_SHA $tailwindCharts/cart-api \
           --set B2C.clientID=none \
