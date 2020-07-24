@@ -112,9 +112,9 @@ jobs:
           kubectl label pods --selector="app=twt-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-from=twt-cart -n ${{ secrets.MASTER_SPACE }}
           kubectl annotate pods --selector="app=twt-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-on-header=kubernetes-route-as=${{steps.generate-valid-branch-name.outputs.result}} -n ${{ secrets.MASTER_SPACE }}
 
-      - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
+      - uses: jldeen/dev-spaces/actions/add-review-url@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           host: ${INGRESS}
-          child-space: ${{steps.generate-valid-branch-name.outputs.result}}
+          main-namespace: ${{steps.generate-valid-branch-name.outputs.result}}
           protocol: "http"
