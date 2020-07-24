@@ -30,7 +30,7 @@ jobs:
 
       - name: "Create Helm gvalues file"
         run: |
-          az extension add application-insights
+          az extension add --name application-insights
           pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
 
       - name: "Set PR Environment"
