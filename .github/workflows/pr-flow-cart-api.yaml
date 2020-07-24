@@ -96,8 +96,8 @@ jobs:
 
       - uses: azure/k8s-bake@v1
         with:
-          renderEngine: "helm2"
-          helmChart: "${{ env.tailwindCharts }}/cart-api"
+          renderEngine: 'helm'
+          helmChart: '${{ env.tailwindCharts }}/cart-api'
           releaseName: ${{steps.generate-release-name.outputs.result}}
           overrides: |
             image.repository:${{ env.CONTAINER_REGISTRY }}/cart.api
