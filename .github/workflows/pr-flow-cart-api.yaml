@@ -91,7 +91,7 @@ jobs:
         run: |
           helm upgrade --install --namespace  ${{ secrets.MASTER_SPACE }} ${{steps.generate-release-name.outputs.result}} \
           -f $tailwindChartValues \
-          --set ingress.hosts=${{steps.generate-valid-branch-name.outputs.result}}.{$INGRESS} \
+          --set ingress.hosts[0]=${{steps.generate-valid-branch-name.outputs.result}}.{$INGRESS} \
           --set image.repository=$CONTAINER_REGISTRY/cart.api \
           --set image.tag=$GITHUB_SHA $tailwindCharts/cart-api \
           --set B2C.clientID=none \
