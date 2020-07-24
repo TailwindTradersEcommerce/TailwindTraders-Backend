@@ -101,7 +101,7 @@ jobs:
           --set ingress.hosts={$INGRESS} \
           --set image.repository=$CONTAINER_REGISTRY/cart.api \
           --set image.tag=$GITHUB_SHA $tailwindCharts/cart-api \
-          --set B2C.clientID=none 
+          --set B2C.clientID=none \
           --set B2C.identityMetadata=none \
           --set B2C.issuer=none \
           --set B2C.policyName=none \
