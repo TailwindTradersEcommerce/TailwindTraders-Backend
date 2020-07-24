@@ -96,7 +96,7 @@ jobs:
         run: |
           cd Deploy/helm
           helm upgrade --install --namespace  ${{ secrets.MASTER_SPACE }} ${{steps.generate-release-name.outputs.result}} \
-          -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$CONTAINER_REGISTRY/cart.api --set image.tag=$GITHUB_SHA ./cart-api --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none
+          -f ../../$tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$CONTAINER_REGISTRY/cart.api --set image.tag=$GITHUB_SHA ./cart-api --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none
 
       - name: Add routing labels
         run: |
