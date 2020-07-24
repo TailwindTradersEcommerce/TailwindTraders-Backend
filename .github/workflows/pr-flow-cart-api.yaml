@@ -98,6 +98,12 @@ jobs:
         run: |
           helm version && echo "helm version"
 
+      - name: setup helm3
+        uses: azure/setup-helm@v1
+        with:
+          version: "3.2.4"
+        id: install
+
       - uses: azure/k8s-bake@v1
         with:
           renderEngine: "helm"
