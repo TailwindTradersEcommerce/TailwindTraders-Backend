@@ -111,6 +111,7 @@ jobs:
         run: |
           kubectl label pods --selector="app=tailwindtraders-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-from=tailwindtraders-cart -n ${{ secrets.MASTER_SPACE }} --overwrite=true
 
+          #try ingress
           kubectl annotate pods --selector="app=tailwindtraders-cart,release=${{steps.generate-release-name.outputs.result}}" routing.visualstudio.io/route-on-header=kubernetes-route-as=${{steps.generate-valid-branch-name.outputs.result}} -n ${{ secrets.MASTER_SPACE }} --overwrite=true
 
       - uses: jldeen/dev-spaces/actions/add-review-url@Releases/v2
