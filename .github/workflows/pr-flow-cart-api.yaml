@@ -94,10 +94,27 @@ jobs:
           release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
           echo ::set-output name=result::$release
 
-      - name: Helm Install PR
-        run: |
-          helm upgrade --install --namespace  ${{ secrets.MASTER_SPACE }} ${{steps.generate-release-name.outputs.result}} \
-          -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$CONTAINER_REGISTRY/cart.api --set image.tag=$GITHUB_SHA $tailwindCharts/cart-api --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none
+      - uses: azure/k8s-bake@v1
+        with:
+          renderEngine: "helm2"
+          helmChart: "${{ env.tailwindCharts }}/cart-api"
+          releaseName: ${{steps.generate-release-name.outputs.result}}
+          overrides: |
+            image.repository:${{ env.CONTAINER_REGISTRY }}/cart.api
+            image.tag:${{ github.sha }}
+        id: bake
+
+      # Deploy app to AKS
+      - uses: azure/k8s-deploy@v1
+        with:
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          namespace: ${{ secrets.MASTER_SPACE }}
+          imagepullsecrets: twt-cart-cr
+
+      # - name: Helm Install PR
+      #   run: |
+      #     helm upgrade --install --namespace  ${{ secrets.MASTER_SPACE }} ${{steps.generate-release-name.outputs.result}} \
+      #     -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$CONTAINER_REGISTRY/cart.api --set image.tag=$GITHUB_SHA $tailwindCharts/cart-api --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none
 
       - name: Add routing labels
         run: |
