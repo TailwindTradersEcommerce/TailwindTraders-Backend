@@ -94,21 +94,10 @@ jobs:
           release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
           echo ::set-output name=result::$release
 
-      - name: check helm version
-        run: |
-          helm version && echo "helm version"
-
-      - name: setup helm3
-        uses: azure/setup-helm@v1
-        with:
-          version: "3.2.4"
-        id: install
-
       - uses: azure/k8s-bake@v1
         with:
           renderEngine: "helm2"
           helmChart: "./Deploy/helm/cart-api/"
-          helm-version: "latest"
           releaseName: ${{steps.generate-release-name.outputs.result}}
           overrides: |
             image.repository:${{ env.CONTAINER_REGISTRY }}/cart.api
