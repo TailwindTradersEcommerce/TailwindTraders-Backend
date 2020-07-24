@@ -94,6 +94,10 @@ jobs:
           release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
           echo ::set-output name=result::$release
 
+      - name: check helm version
+        run: |
+          helm version
+
       - uses: azure/k8s-bake@v1
         with:
           renderEngine: "helm"
