@@ -96,7 +96,7 @@ jobs:
 
       - name: check helm version
         run: |
-          helm version
+          helm version && echo "helm version"
 
       - uses: azure/k8s-bake@v1
         with:
