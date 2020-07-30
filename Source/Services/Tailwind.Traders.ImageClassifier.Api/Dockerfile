@@ -32,4 +32,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 COPY --from=build /src/project/model model
-ENTRYPOINT ["dotnet", "Tailwind.Traders.ImageClassifier.Api.dll"]
+ENTRYPOINT ["dotnet", "Tailwind.Traders.ImageClassifier.Api.dll"] 
