@@ -6,6 +6,4 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-USER 1000
-
 CMD [ "node", "server.js" ]
