@@ -64,7 +64,7 @@ pipelines:
           onExecute: 
             - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
 
-      - name: Create Valid Branch name
+      - name: createValidBranchName
         type: bash
         configuration:
           affinityGroup: cartapi
