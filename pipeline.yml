@@ -49,6 +49,6 @@ pipelines:
           integrations:
             - name: Artifactory    
           inputSteps:
-            - name: GitHub
+            - name: dockerBuild
           outputResources:
             - name: buildInfo
