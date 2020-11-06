@@ -13,7 +13,7 @@ env:
   nameSpace: twt
 
   # helmchart
-  tailwindChartValuesScript: Deploy/powershell/generate-config.ps1
+  tailwindChartValuesScript: Deploy/helm-values/generate-config.ps1
   tailwindChartValues: values.yaml
   tailwindCharts: Deploy/helm
 
@@ -84,7 +84,7 @@ jobs:
           helm upgrade --install --namespace  ${{ env.nameSpace }} ${{steps.generate-valid-branch-name.outputs.result}} \
           -f $tailwindChartValues \
           --set ingress.hosts={$INGRESS} \
-          --set image.repository=$CONTAINER_REGISTRY/cart.api \
+          --set image.repository=$CONTAINER_REGISTRY/images/cart.api \
           --set image.tag=$GITHUB_SHA $tailwindCharts/cart-api \
           --set B2C.clientID=none \
           --set B2C.identityMetadata=none \
