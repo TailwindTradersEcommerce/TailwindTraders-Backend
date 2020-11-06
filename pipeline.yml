@@ -2,7 +2,7 @@ resources:
   - name: GitHub
     type: GitRepo
     configuration:
-      gitProvider: JldeenitHub  # replace with your integration
+      gitProvider: JldeenGitHub  # replace with your integration
       path: jldeen/TailwindTraders-Backend # replace with your repository name
       branches:
         include: main
@@ -28,3 +28,7 @@ pipelines:
           dockerFileName: Dockerfile
           dockerImageName: jldeen.jfrog.io/images/cart.api       # replace with your fully qualified Docker registry/image name
           dockerImageTag: ${run_number}
+          inputResources:
+            - name: GitHub
+          integrations:
+            - name: Artifactory
