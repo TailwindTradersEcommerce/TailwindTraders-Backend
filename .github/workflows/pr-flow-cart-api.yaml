@@ -31,6 +31,7 @@ jobs:
 
       - name: "Create Helm gvalues file"
         run: |
+          az account set --subscription "${{ secrets.SUBSCRIPTION }}"
           az extension add --name application-insights
           pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
 
