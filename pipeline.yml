@@ -12,7 +12,7 @@ resources:
   - name: Artifactory
     type: Image
     configuration:
-      registry: images     # replace with your Artifactory integration
+      registry: Artifactory   # replace with your Artifactory integration
       sourceRepository: images   # required if registry is Artifactory
       imageName: jldeen.jfrog.io/images/cart.api # replace with your image path and name
       imageTag: ${run_number}
