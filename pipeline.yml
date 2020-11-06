@@ -18,6 +18,13 @@ resources:
       imageTag: ${run_number}
       autoPull: true
 
+  - name: buildInfo
+    type: buildInfo
+    configuration:
+      sourceArtifactory: Artifactory
+      buildName: ${pipeline_name}
+      buildNumber: ${run_number}
+
 pipelines:
   - name: PR_JFrog_Cart_Api
     steps:
@@ -32,3 +39,16 @@ pipelines:
             - name: GitHub
           integrations:
             - name: Artifactory
+
+      - name: dockerPush
+        type: DockerPush
+        configuration:
+          autoPublishBuildInfo: true
+          forceXrayScan: true
+          targetRepository: images
+          integrations:
+            - name: Artifactory    
+          inputSteps:
+            - name: GitHub
+          outputResources:
+            - name: buildInfo
