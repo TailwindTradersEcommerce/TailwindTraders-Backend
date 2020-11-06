@@ -13,7 +13,7 @@ env:
   nameSpace: twt
 
   # helmchart
-  tailwindChartValuesScript: Deploy/helm-values/generate-config.ps1
+  tailwindChartValuesScript: Deploy/powershell/generate-config.ps1
   tailwindChartValues: values.yaml
   tailwindCharts: Deploy/helm
 
