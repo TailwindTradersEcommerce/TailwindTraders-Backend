@@ -8,15 +8,6 @@ resources:
         include: main
       buildOn:
          pullRequestCreate: true
- 
-  - name: Artifactory
-    type: Image
-    configuration:
-      registry: Artifactory   # replace with your Artifactory integration
-      sourceRepository: images   # required if registry is Artifactory
-      imageName: jldeen.jfrog.io/images/cart.api # replace with your image path and name
-      imageTag: ${run_number}
-      autoPull: true
 
   - name: buildInfo
     type: buildInfo
@@ -63,24 +54,27 @@ pipelines:
           outputResources:
             - name: buildInfo
 
-      # - name: Create helm gvalues file
-      #   type: powershell
-      #   affinityGroup: cartapi
-      #   configuration:       
-      #     execution:
-      #       onExecute: 
-      #         - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
-      #     inputResources:
-      #       - name: GitHub
+      - name: createGlobalValues
+        type: powershell
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub       
+        execution:
+          onExecute: 
+            - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
 
-      # - name: Create Valid Branch name
-      #   type: bash
-      #   configuration:
-      #     execution:
-      #       onExecute:
-      #         - branch=${GITHUB_HEAD_REF::63}
-      #         - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
-      #         - add_run_variables result="$branch"
+      - name: Create Valid Branch name
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+        execution:
+          onExecute:
+            - branch=${GITHUB_HEAD_REF::63}
+            - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+            - add_run_variables result="$branch"
 
       # - name: Helm Install PR
       #   type: HelmDeploy
