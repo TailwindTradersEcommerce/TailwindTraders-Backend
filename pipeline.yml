@@ -1,0 +1,30 @@
+resources:
+  - name: GitHub
+    type: GitRepo
+    configuration:
+      gitProvider: JldeenitHub  # replace with your integration
+      path: jldeen/TailwindTraders-Backend # replace with your repository name
+      branches:
+        include: main
+      buildOn:
+         pullRequestCreate: true
+ 
+  - name: Artifactory
+    type: Image
+    configuration:
+      registry: images     # replace with your Artifactory integration
+      sourceRepository: images   # required if registry is Artifactory
+      imageName: jldeen.jfrog.io/images/cart.api # replace with your image path and name
+      imageTag: ${run_number}
+      autoPull: true
+
+pipelines:
+  - name: PR_JFrog_Cart_Api
+    steps:
+      - name: dockerBuild
+        type: DockerBuild
+        configuration:
+          dockerFileLocation: Source/Services/Tailwind.Traders.Cart.Api/
+          dockerFileName: Dockerfile
+          dockerImageName: jldeen.jfrog.io/images/cart.api       # replace with your fully qualified Docker registry/image name
+          dockerImageTag: ${run_number}
