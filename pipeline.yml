@@ -27,6 +27,14 @@ resources:
 
 pipelines:
   - name: PR_JFrog_Cart_Api
+    configuration:
+      environmentVariables:
+        readOnly:
+          resourceGroup: ado30jd
+          nameSpace: twt
+          tailwindChartValuesScript: Deploy/helm-values/generate-config.ps1
+          tailwindChartValues: values.yaml
+          tailwindCharts: Deploy/helm
     steps:
       - name: dockerBuild
         type: DockerBuild
@@ -35,6 +43,7 @@ pipelines:
           dockerFileName: Dockerfile
           dockerImageName: jldeen.jfrog.io/images/cart.api       # replace with your fully qualified Docker registry/image name
           dockerImageTag: ${run_number}
+          affinityGroup: cartapi
           inputResources:
             - name: GitHub
           integrations:
@@ -46,9 +55,42 @@ pipelines:
           autoPublishBuildInfo: true
           forceXrayScan: true
           targetRepository: images
+          affinityGroup: cartapi
           integrations:
-            - name: Artifactory    
+            - name: Artifactory   
           inputSteps:
             - name: dockerBuild
           outputResources:
             - name: buildInfo
+
+      - name: Create helm gvalues file
+        type: powershell
+        affinityGroup: cartapi
+        configuration:       
+          execution:
+            onExecute: 
+              - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+          inputResources:
+            - name: GitHub
+
+      - name: Create Valid Branch name
+        type: bash
+        configuration:
+          execution:
+            onExecute:
+              - branch=${GITHUB_HEAD_REF::63}
+              - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+              - add_run_variables result="$branch"
+
+      # - name: Helm Install PR
+      #   type: HelmDeploy
+      #   configuration:
+      #     configuration:
+      #     #inherits from bash
+      #     helmVersion: 3
+      #     affinityGroup: cartapi
+      #     inputResources:
+      #       - name: GitHub
+
+
+
