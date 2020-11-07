@@ -17,7 +17,7 @@ resources:
       buildNumber: ${run_number}
 
 pipelines:
-  - name: PR_JFrog_Cart_Api
+  - name: PR_Cart_Api
     configuration:
       environmentVariables:
         readOnly:
