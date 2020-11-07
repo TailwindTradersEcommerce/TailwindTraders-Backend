@@ -54,18 +54,6 @@ pipelines:
           outputResources:
             - name: buildInfo
 
-      - name: createGlobalValues
-        type: bash
-        configuration:
-          affinityGroup: cartapi
-          inputResources:
-            - name: GitHub
-          inputSteps:
-            - name: dockerPush       
-        execution:
-          onExecute: 
-            - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
-
       - name: createValidBranchName
         type: bash
         configuration:
@@ -73,12 +61,36 @@ pipelines:
           inputResources:
             - name: GitHub
           inputSteps:
-            - name: createGlobalValues 
+            - name: dockerPush 
         execution:
           onExecute:
             - branch=${GITHUB_HEAD_REF::63}
             - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
             - add_run_variables result="$branch"
+        
+      - name: createGlobalValues
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          inputSteps:
+            - name: createValidBranchName
+          execution:
+            onExecute:
+              - docker run mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+
+      # - name: createGlobalValues
+      #   type: powershell
+      #   configuration:
+      #     affinityGroup: cartapi
+      #     inputResources:
+      #       - name: GitHub
+      #     inputSteps:
+      #       - name: dockerPush       
+      #   execution:
+      #     onExecute: 
+      #       - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
 
       # - name: Helm Install PR
       #   type: HelmDeploy
