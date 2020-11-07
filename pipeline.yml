@@ -68,7 +68,7 @@ pipelines:
             - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
             - add_run_variables result="$branch"
         
-      - name: createGlobalValues
+      - name: createHelmGlobalValues
         type: bash
         configuration:
           affinityGroup: cartapi
