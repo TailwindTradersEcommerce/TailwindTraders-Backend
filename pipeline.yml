@@ -79,7 +79,7 @@ pipelines:
             - name: createValidBranchName
         execution:
           onExecute:
-            - docker run mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+            - docker run -it -v ${PWD}/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
 
       # - name: createGlobalValues
       #   type: powershell
