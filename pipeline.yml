@@ -92,9 +92,9 @@ pipelines:
             - name: setPREnvironment
         execution:
           onExecute:
-            - ls res_GitHub_resourcePath/Deploy
-            - docker run -v res_GitHub_resourcePath/Deploy:/Deploy mcr.microsoft.com/powershell ls /Deploy
-            - docker run -v res_GitHub_resourcePath/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+            - ls $res_GitHub_resourcePath/Deploy
+            - docker run -v $res_GitHub_resourcePath/Deploy:/Deploy mcr.microsoft.com/powershell ls /Deploy
+            - docker run -v $res_GitHub_resourcePath/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
             - add_run_files $tailwindChartValues $tailwindChartValues
       
       # - name: Helm Install PR
@@ -132,11 +132,11 @@ pipelines:
           inputSteps:
             - name: createHelmGlobalValues
           environmentVariables:
-            GITHUB_TOKEN: res_GitHub_gitProvider_token
+            GITHUB_TOKEN: $res_GitHub_gitProvider_token
             GITHUB_OWNER: jldeen
             GITHUB_REPO: TailwindTraders-Backend
             GITHUB_COMMENT_TYPE: pr
-            GITHUB_PR_ISSUE_NUMBER: res_GitHub_pullRequestNumber
+            GITHUB_PR_ISSUE_NUMBER: $res_GitHub_pullRequestNumber
         execution:
           onExecute:
             - wget https://github.com/cloudposse/github-commenter/releases/download/0.8.0/github-commenter_linux_amd64 -o github-commenter
