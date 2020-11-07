@@ -76,9 +76,9 @@ pipelines:
             - name: GitHub
           inputSteps:
             - name: createValidBranchName
-          execution:
-            onExecute:
-              - docker run mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+        execution:
+          onExecute:
+            - docker run mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
 
       # - name: createGlobalValues
       #   type: powershell
