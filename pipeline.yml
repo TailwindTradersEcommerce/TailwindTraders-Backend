@@ -79,20 +79,8 @@ pipelines:
             - name: createValidBranchName
         execution:
           onExecute:
-            - docker run -it -v ${PWD}/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
-
-      # - name: createGlobalValues
-      #   type: powershell
-      #   configuration:
-      #     affinityGroup: cartapi
-      #     inputResources:
-      #       - name: GitHub
-      #     inputSteps:
-      #       - name: dockerPush       
-      #   execution:
-      #     onExecute: 
-      #       - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
-
+            - docker run -v ${PWD}/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+      
       # - name: Helm Install PR
       #   type: HelmDeploy
       #   configuration:
@@ -103,5 +91,27 @@ pipelines:
       #     inputResources:
       #       - name: GitHub
 
-
-
+      # - name: addRoutingLabels
+      #   type: bash
+      #   configuration:
+      #     affinityGroup: cartapi
+      #     inputResources:
+      #       - name: GitHub
+      #     inputSteps:
+      #       - name: createHelmGlobalValues
+      #     execution:
+      #       onExecute:
+      #       - kubectl label pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-from=$result-tailwindtraders-cart -n $nameSpace --overwrite=true
+      #       - kubectl annotate pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-on-header=kubernetes-route-as=$result -n $nameSpace --overwrite=true
+      
+      - name: addGitHubFQDN
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          inputSteps:
+            - name: createHelmGlobalValues
+        execution:
+          onExecute:
+            - 
