@@ -92,9 +92,10 @@ pipelines:
             - name: setPREnvironment
         execution:
           onExecute:
-            - ls ${PWD}/Deploy
-            - docker run -v ${PWD}/Deploy:/Deploy mcr.microsoft.com/powershell ls /Deploy
-            - docker run -v ${PWD}/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+            - ls res_GitHub_resourcePath/Deploy
+            - docker run -v res_GitHub_resourcePath/Deploy:/Deploy mcr.microsoft.com/powershell ls /Deploy
+            - docker run -v res_GitHub_resourcePath/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+            - add_run_files $tailwindChartValues $tailwindChartValues
       
       # - name: Helm Install PR
       #   type: HelmDeploy
@@ -105,6 +106,9 @@ pipelines:
       #     affinityGroup: cartapi
       #     inputResources:
       #       - name: GitHub
+          # execution:
+          #   onStart:
+          #     - restore_run_files $tailwindChartValues $tailwindChartValues
 
       # - name: addRoutingLabels
       #   type: bash
