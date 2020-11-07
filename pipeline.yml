@@ -55,7 +55,7 @@ pipelines:
             - name: buildInfo
 
       - name: createGlobalValues
-        type: powershell
+        type: bash
         configuration:
           affinityGroup: cartapi
           inputResources:
