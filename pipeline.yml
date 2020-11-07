@@ -60,6 +60,7 @@ pipelines:
           affinityGroup: cartapi
           inputResources:
             - name: GitHub
+            - name: buildInfo
           inputSteps:
             - name: dockerPush 
         execution:
