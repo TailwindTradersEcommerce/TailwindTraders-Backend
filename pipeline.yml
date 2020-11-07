@@ -68,6 +68,20 @@ pipelines:
             - branch=${GITHUB_HEAD_REF::63}
             - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
             - add_run_variables result="$branch"
+      
+      - name: setPREnvironment
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+            - name: buildInfo
+          inputSteps:
+            - name: createValidBranchName 
+        execution:
+          onExecute:
+            - ingress="5e6d13db1926415ea94e.eastus.aksapp.io"
+            - add_run_variables INGRESS=$ingress
         
       - name: createHelmGlobalValues
         type: bash
@@ -76,7 +90,7 @@ pipelines:
           inputResources:
             - name: GitHub
           inputSteps:
-            - name: createValidBranchName
+            - name: setPREnvironment
         execution:
           onExecute:
             - docker run -v ${PWD}/Deploy:/Deploy mcr.microsoft.com/powershell pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
@@ -112,6 +126,14 @@ pipelines:
             - name: GitHub
           inputSteps:
             - name: createHelmGlobalValues
+          environmentVariables:
+            - GITHUB_TOKEN: XXXXXXXXXXXXXXXX
+            - GITHUB_OWNER: jldeen
+            - GITHUB_REPO: TailwindTraders-Backend
+            - GITHUB_COMMENT_TYPE: pr
+            - GITHUB_PR_ISSUE_NUMBER: 
         execution:
           onExecute:
-            - 
+            - wget https://github.com/cloudposse/github-commenter/releases/download/0.8.0/github-commenter_linux_amd64 -o github-commenter
+            - chmod +x github-commenter
+            - $result.$INGRESS 2>&1 | github-commenter -format "You can see a private version of the changes made in this pull request here `$result.$ingress`<br/>```{{.}}```"
