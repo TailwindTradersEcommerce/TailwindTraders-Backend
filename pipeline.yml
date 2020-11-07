@@ -59,7 +59,9 @@ pipelines:
         configuration:
           affinityGroup: cartapi
           inputResources:
-            - name: GitHub       
+            - name: GitHub
+          inputSteps:
+            - name: dockerPush       
         execution:
           onExecute: 
             - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
@@ -70,6 +72,8 @@ pipelines:
           affinityGroup: cartapi
           inputResources:
             - name: GitHub
+          inputSteps:
+            - name: createGlobalValues 
         execution:
           onExecute:
             - branch=${GITHUB_HEAD_REF::63}
