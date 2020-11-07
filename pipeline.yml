@@ -127,11 +127,11 @@ pipelines:
           inputSteps:
             - name: createHelmGlobalValues
           environmentVariables:
-            GITHUB_TOKEN: 
+            GITHUB_TOKEN: res_GitHub_gitProvider_token
             GITHUB_OWNER: jldeen
             GITHUB_REPO: TailwindTraders-Backend
             GITHUB_COMMENT_TYPE: pr
-            GITHUB_PR_ISSUE_NUMBER: 
+            GITHUB_PR_ISSUE_NUMBER: res_GitHub_pullRequestNumber
         execution:
           onExecute:
             - wget https://github.com/cloudposse/github-commenter/releases/download/0.8.0/github-commenter_linux_amd64 -o github-commenter
