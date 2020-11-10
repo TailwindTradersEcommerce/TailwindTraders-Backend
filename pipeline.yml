@@ -23,7 +23,7 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
-          resourceGroup: ado30jd
+          resourceGroup: twt2020jd
           nameSpace: twt
           tailwindChartValuesScript: Deploy/helm-values/generate-config.ps1
           tailwindChartValues: values.yaml
