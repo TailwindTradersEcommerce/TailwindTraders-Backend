@@ -1,0 +1,155 @@
+resources:
+  - name: GitHub
+    type: GitRepo
+    configuration:
+      gitProvider: JldeenGitHub  # replace with your integration
+      path: jldeen/TailwindTraders-Backend # replace with your repository name
+      branches:
+        include: main
+      buildOn:
+         pullRequestCreate: true
+
+  - name: buildInfo
+    type: buildInfo
+    configuration:
+      sourceArtifactory: Artifactory
+      buildName: ${pipeline_name}
+      buildNumber: ${run_number}
+
+pipelines:
+  - name: PR_Cart_Api
+    configuration:
+      environmentVariables:
+        readOnly:
+          resourceGroup: ado30jd
+          nameSpace: twt
+          tailwindChartValuesScript: Deploy/helm-values/generate-config.ps1
+          tailwindChartValues: values.yaml
+          tailwindCharts: Deploy/helm
+    steps:
+      - name: dockerBuild
+        type: DockerBuild
+        configuration:
+          dockerFileLocation: Source/Services/Tailwind.Traders.Cart.Api/
+          dockerFileName: Dockerfile
+          dockerImageName: jldeen.jfrog.io/images/cart.api       # replace with your fully qualified Docker registry/image name
+          dockerImageTag: ${run_number}
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          integrations:
+            - name: Artifactory
+
+      - name: dockerPush
+        type: DockerPush
+        configuration:
+          autoPublishBuildInfo: true
+          forceXrayScan: true
+          targetRepository: images
+          affinityGroup: cartapi
+          integrations:
+            - name: Artifactory   
+          inputSteps:
+            - name: dockerBuild
+          outputResources:
+            - name: buildInfo
+
+      - name: createValidBranchName
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+            - name: buildInfo
+          inputSteps:
+            - name: dockerPush 
+        execution:
+          onExecute:
+            - branch=${GITHUB_HEAD_REF::63}
+            - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+            - add_run_variables result="$branch"
+      
+      - name: setPREnvironment
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          inputSteps:
+            - name: createValidBranchName 
+        execution:
+          onExecute:
+            - ingress="5e6d13db1926415ea94e.eastus.aksapp.io"
+            - add_run_variables INGRESS=$ingress
+        
+      - name: createHelmGlobalValues
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          inputSteps:
+            - name: setPREnvironment
+        execution:
+          onExecute:
+            - sudo apt-get update
+            - sudo apt-get install -y wget apt-transport-https
+            - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
+            - sudo dpkg -i packages-microsoft-prod.deb
+            - sudo apt-get update
+            - sudo apt-get install -y powershell
+            - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+            - add_run_files $tailwindChartValues $tailwindChartValues
+      
+      - name: helmPRInstall
+        type: HelmDeploy
+        configuration:
+          configuration:
+          #inherits from bash
+          helmVersion: 3
+          releaseName: $result
+          chartPath: $tailwindCharts/cart-api
+          flags: --set ingress.hosts=$INGRESS,image.repository=jldeen.jfrog.io/images/cart.api,image.tag=${run_number},B2C.clientID=none,B2C.identityMetadata=none,B2C.issuer=none,B2C.policyName=none,B2C.tenantID=none -f $tailwindChartValues
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          inputSteps:
+            - name: createHelmGlobalValues
+          integrations:
+            - name: AKS
+          execution:
+            onStart:
+              - restore_run_files $tailwindChartValues $tailwindChartValues
+
+      - name: addRoutingLabels
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          inputSteps:
+            - name: helmPRInstall
+          execution:
+            onExecute:
+            - kubectl label pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-from=$result-tailwindtraders-cart -n $nameSpace --overwrite=true
+            - kubectl annotate pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-on-header=kubernetes-route-as=$result -n $nameSpace --overwrite=true
+      
+      - name: addGitHubFQDN
+        type: bash
+        configuration:
+          affinityGroup: cartapi
+          inputResources:
+            - name: GitHub
+          inputSteps:
+            - name: addRoutingLabels
+          environmentVariables:
+            GITHUB_TOKEN: $res_GitHub_gitProvider_token
+            GITHUB_OWNER: jldeen
+            GITHUB_REPO: TailwindTraders-Backend
+            GITHUB_COMMENT_TYPE: pr
+            GITHUB_PR_ISSUE_NUMBER: $res_GitHub_pullRequestNumber
+        execution:
+          onExecute:
+            - wget https://github.com/cloudposse/github-commenter/releases/download/0.8.0/github-commenter_linux_amd64 -o github-commenter
+            - chmod +x github-commenter
+            - $result.$INGRESS 2>&1 | github-commenter -format "You can see a private version of the changes made in this pull request here `$result.$ingress`<br/>```{{.}}```"
