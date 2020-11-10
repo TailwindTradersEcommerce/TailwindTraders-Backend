@@ -92,6 +92,7 @@ pipelines:
             - name: setPREnvironment
         execution:
           onExecute:
+            - chmod 1777 /tmp
             - cd /tmp
             - wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
             - sudo apt-get install ./packages-microsoft-prod.deb
