@@ -91,7 +91,7 @@ pipelines:
             image:
               custom:
                 name: jldeen.jfrog.io
-                tag: 1
+                tag: "1"
                 registry: Artifactory
                 sourceRepository: images
           inputResources:
