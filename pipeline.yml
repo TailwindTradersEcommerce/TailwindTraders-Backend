@@ -104,7 +104,6 @@ pipelines:
       - name: helmPRInstall
         type: HelmDeploy
         configuration:
-          configuration:
           #inherits from bash
           helmVersion: 3
           releaseName: $result
@@ -117,9 +116,9 @@ pipelines:
             - name: createHelmGlobalValues
           integrations:
             - name: AKS
-          execution:
-            onStart:
-              - restore_run_files $tailwindChartValues $tailwindChartValues
+        execution:
+          onStart:
+            - restore_run_files $tailwindChartValues $tailwindChartValues
 
       - name: addRoutingLabels
         type: bash
@@ -129,10 +128,10 @@ pipelines:
             - name: GitHub
           inputSteps:
             - name: helmPRInstall
-          execution:
-            onExecute:
-            - kubectl label pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-from=$result-tailwindtraders-cart -n $nameSpace --overwrite=true
-            - kubectl annotate pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-on-header=kubernetes-route-as=$result -n $nameSpace --overwrite=true
+        execution:
+          onExecute:
+          - kubectl label pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-from=$result-tailwindtraders-cart -n $nameSpace --overwrite=true
+          - kubectl annotate pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-on-header=kubernetes-route-as=$result -n $nameSpace --overwrite=true
       
       - name: addGitHubFQDN
         type: bash
