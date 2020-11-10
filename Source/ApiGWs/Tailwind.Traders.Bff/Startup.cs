@@ -116,7 +116,7 @@ namespace Tailwind.Traders.Bff
 
             //register delegating handlers
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
-            services.AddTransient<LPKMessageHandler>();
+            services.AddTransient<DevspacesMessageHandler>();
 
             //set 5 min as the lifetime for each HttpMessageHandler int the pool
             services.AddHttpClient("extendedhandlerlifetime").SetHandlerLifetime(TimeSpan.FromMinutes(5));
@@ -125,7 +125,7 @@ namespace Tailwind.Traders.Bff
             services.AddHttpClient(HttpClients.ApiGW)
                    .SetHandlerLifetime(TimeSpan.FromMinutes(5))  //Sample. Default lifetime is 2 minutes
                    .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                   .AddHttpMessageHandler<LPKMessageHandler>();
+                   .AddHttpMessageHandler<DevspacesMessageHandler>();
 
             return services;
         }

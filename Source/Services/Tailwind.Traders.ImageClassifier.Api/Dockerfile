@@ -1,7 +1,7 @@
-ARG sdkTag=3.0
-ARG runtimeTag=3.0
-ARG image=mcr.microsoft.com/dotnet/core/aspnet
-ARG sdkImage=mcr.microsoft.com/dotnet/core/sdk
+ARG sdkTag=5.0
+ARG runtimeTag=5.0
+ARG image=mcr.microsoft.com/dotnet/aspnet
+ARG sdkImage=mcr.microsoft.com/dotnet/sdk
 
 FROM ${image}:${runtimeTag} AS base
 WORKDIR /app
@@ -32,7 +32,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 COPY --from=build /src/project/model model
-
-USER 1000
-
 ENTRYPOINT ["dotnet", "Tailwind.Traders.ImageClassifier.Api.dll"]

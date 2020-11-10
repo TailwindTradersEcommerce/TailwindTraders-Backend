@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Tailwind.Traders.MobileBff.Infrastructure
 {
-    public class LPKMessageHandler : DelegatingHandler
+    public class DevspacesMessageHandler : DelegatingHandler
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public LPKMessageHandler(IHttpContextAccessor httpContextAccessor)
+        public DevspacesMessageHandler(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -20,10 +20,9 @@ namespace Tailwind.Traders.MobileBff.Infrastructure
         {
             var req = _httpContextAccessor.HttpContext.Request;
 
-            if (req.Headers.ContainsKey("kubernetes-route-as"))
+            if (req.Headers.ContainsKey("azds-route-as"))
             {
-                request.Headers.Add("kubernetes-route-as", req.Headers["kubernetes-route-as"] as IEnumerable<string>);
-                Console.WriteLine("Kubernetes-route-as : " + string.Join(",", req.Headers["kubernetes-route-as"]));
+                request.Headers.Add("azds-route-as", req.Headers["azds-route-as"] as IEnumerable<string>);
             }
             return base.SendAsync(request, cancellationToken);
         }
