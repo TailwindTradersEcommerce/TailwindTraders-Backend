@@ -4,6 +4,8 @@ resources:
     configuration:
       gitProvider: JldeenGitHub  # replace with your integration
       path: jldeen/TailwindTraders-Backend # replace with your repository name
+      files:
+        exclude: pipeline.yml
       branches:
         include: main
       buildOn:
@@ -91,13 +93,15 @@ pipelines:
             image:
               custom:
                 name: jldeen.jfrog.io/images/pwsh
-                tag: "1"
+                tag: "2"
                 registry: Artifactory
                 sourceRepository: images
           inputResources:
             - name: GitHub
           inputSteps:
             - name: setPREnvironment
+          integrations:
+            - name: Azure
         execution:
           onExecute:
             - cd $res_GitHub_resourcePath
