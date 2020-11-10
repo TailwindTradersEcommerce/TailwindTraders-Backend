@@ -91,6 +91,7 @@ pipelines:
             image:
               custom:
                 name: mcr.microsoft.com/powershell
+                tag: latest
           inputResources:
             - name: GitHub
           inputSteps:
