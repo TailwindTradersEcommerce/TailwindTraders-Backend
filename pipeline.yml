@@ -86,17 +86,20 @@ pipelines:
         type: bash
         configuration:
           affinityGroup: cartapi
+          runtime:
+            type: image
+            image:
+              custom:
+                name: mcr.microsoft.com/powershell
           inputResources:
             - name: GitHub
           inputSteps:
             - name: setPREnvironment
         execution:
           onExecute:
-            - sudo apt-get update
-            - sudo apt-get install snapd
-            - sudo snap install powershell --classic
+            - cd $res_GitHub_resourcePath
             - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
-            - add_run_files $tailwindChartValues $tailwindChartValues
+            - add_run_files $tailwindChartValues $res_GitHub_resourcePath/$tailwindChartValues
       
       - name: helmPRInstall
         type: HelmDeploy
