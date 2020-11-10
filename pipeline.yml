@@ -106,7 +106,9 @@ pipelines:
           onExecute:
             - cd $res_GitHub_resourcePath
             - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
-            - add_run_files $tailwindChartValues $res_GitHub_resourcePath/$tailwindChartValues
+            - ls -la
+            - ls -la $res_GitHub_resourcePath/
+            - add_run_files $tailwindChartValues values
       
       - name: helmPRInstall
         type: HelmDeploy
@@ -125,7 +127,7 @@ pipelines:
             - name: AKS
         execution:
           onStart:
-            - restore_run_files $tailwindChartValues $tailwindChartValues
+            - restore_run_files values $res_GitHub_resourcePath/$tailwindChartValues
 
       - name: addRoutingLabels
         type: bash
