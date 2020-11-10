@@ -90,8 +90,10 @@ pipelines:
             type: image
             image:
               custom:
-                name: mcr.microsoft.com/powershell
-                tag: latest
+                name: jldeen.jfrog.io
+                tag: 1
+                registry: Artifactory
+                sourceRepository: images
           inputResources:
             - name: GitHub
           inputSteps:
