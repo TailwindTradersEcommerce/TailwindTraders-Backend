@@ -90,7 +90,7 @@ pipelines:
             type: image
             image:
               custom:
-                name: jldeen.jfrog.io
+                name: jldeen.jfrog.io/images/pwsh
                 tag: "1"
                 registry: Artifactory
                 sourceRepository: images
