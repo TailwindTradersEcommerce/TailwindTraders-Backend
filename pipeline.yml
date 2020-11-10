@@ -92,9 +92,8 @@ pipelines:
             - name: setPREnvironment
         execution:
           onExecute:
-            - wget https://github.com/PowerShell/PowerShell/releases/download/v7.0.3/powershell-lts_7.0.3-1.ubuntu.18.04_amd64.deb
-            - sudo dpkg -i powershell-lts_7.0.3-1.ubuntu.18.04_amd64.deb
-            - sudo apt-get install -f
+            - sudo apt install snapd
+            - sudo snap install powershell --classic
             - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
             - add_run_files $tailwindChartValues $tailwindChartValues
       
