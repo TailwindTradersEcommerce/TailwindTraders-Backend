@@ -136,7 +136,7 @@ pipelines:
                   - "12.18.2"
           releaseName: ${result}
           chartPath: ./${tailwindCharts}/cart-api
-          flags: "--namespace twt -f $res_GitHub_resourcePath/$tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=jldeen.jfrog.io/images/cart.api --set image.tag=${run_number} --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none"
+          flags: "--namespace twt -f $res_GitHub_resourcePath/$tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=jldeen.jfrog.io/images/cart.api --set imagePullSecrets.name=$result --set image.tag=${run_number} --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none"
           affinityGroup: cartapi
           inputResources:
             - name: GitHub
@@ -144,9 +144,13 @@ pipelines:
             - name: createHelmGlobalValues
           integrations:
             - name: AKS
+            - name: Artifactory
         execution:
           onStart:
             - restore_run_files values $res_GitHub_resourcePath/$tailwindChartValues
+            - secretCheck=$(kubectl get secrets -n $nameSpace | grep "$result")
+            - if [ $secretCheck ]; then kubectl secret create docker-registry $result --docker-server=int_Artifactory_url --docker-username=int_Artifactory_user --docker-password=int_Artifactory_apikey && echo "$result k8s secret created!"; else echo "$result k8s secret already exists!"; fi
+
 
       - name: addRoutingLabels
         type: bash
@@ -156,6 +160,8 @@ pipelines:
             - name: GitHub
           inputSteps:
             - name: helmPRInstall
+          integrations:
+            - name: AKS
         execution:
           onExecute:
           - kubectl label pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-from=$result-tailwindtraders-cart -n $nameSpace --overwrite=true
