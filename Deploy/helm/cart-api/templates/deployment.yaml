@@ -25,7 +25,6 @@ spec:
       {{ if .Values.imagePullSecrets -}}
       imagePullSecrets:
         - name: {{ .values.imagePullSecrets }}
-      {{- end -}}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
