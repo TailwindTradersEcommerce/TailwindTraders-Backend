@@ -9,7 +9,7 @@ on:
 
 env:
   # azure
-  resourceGroup: ado30jd
+  resourceGroup: twt2020jd
   nameSpace: twt
 
   # helmchart
