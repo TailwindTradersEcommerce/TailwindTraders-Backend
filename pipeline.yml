@@ -138,7 +138,6 @@ pipelines:
           onStart:
             - restore_run_files values $tailwindChartValues
             - ls -la
-          onExecute:
 
       - name: addRoutingLabels
         type: bash
