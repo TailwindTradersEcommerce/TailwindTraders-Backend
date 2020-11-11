@@ -136,7 +136,7 @@ pipelines:
                   - "12.18.2"
           releaseName: ${result}
           chartPath: ./${tailwindCharts}/cart-api
-          flags: "--namespace twt -f $tailwindChartValues --set ingress.hosts=$INGRESS --set image.repository=jldeen.jfrog.io/images/cart.api --set image.tag=${run_number} --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none"
+          flags: "--namespace twt -f $res_GitHub_resourcePath/$tailwindChartValues --set ingress.hosts=$INGRESS --set image.repository=jldeen.jfrog.io/images/cart.api --set image.tag=${run_number} --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none"
           affinityGroup: cartapi
           inputResources:
             - name: GitHub
