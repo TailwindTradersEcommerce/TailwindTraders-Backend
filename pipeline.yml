@@ -112,6 +112,7 @@ pipelines:
         type: HelmDeploy
         configuration:
           #inherits from bash
+          helmVersion: 3
           runtime:
             type: image
             image:
