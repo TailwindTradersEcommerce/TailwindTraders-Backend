@@ -24,9 +24,7 @@ spec:
       serviceAccountName: {{ .Values.inf.sa }}
       {{ if .Values.imagePullSecrets -}}
       imagePullSecrets:
-      {{ range .Values.imagePullSecrets -}}
-        - name: {{ .name }}
-      {{- end -}}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}

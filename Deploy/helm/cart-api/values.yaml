@@ -7,7 +7,7 @@ image:
   pullPolicy: Always
 
 imagePullSecrets:
-  name: cart
+  - name: twt
 
 service:
   type: ClusterIP
