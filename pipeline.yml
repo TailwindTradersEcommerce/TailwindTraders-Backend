@@ -149,7 +149,7 @@ pipelines:
           onStart:
             - restore_run_files values $res_GitHub_resourcePath/$tailwindChartValues
             - secretCheck=$(kubectl get secrets -n $nameSpace | grep "$result" || true)
-            - if [[ $secretCheck ]]; then echo "$result k8s secret already exists!"; else kubectl secret create docker-registry $result --docker-server=int_Artifactory_url --docker-username=int_Artifactory_user --docker-password=int_Artifactory_apikey && echo "$result k8s secret created!"; fi
+            - if [[ $secretCheck ]]; then echo "$result k8s secret already exists!"; else kubectl create secret docker-registry $result --docker-server=int_Artifactory_url --docker-username=int_Artifactory_user --docker-password=int_Artifactory_apikey && echo "$result k8s secret created!"; fi
 
 
       - name: addRoutingLabels
