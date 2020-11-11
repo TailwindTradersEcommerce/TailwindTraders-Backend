@@ -69,8 +69,9 @@ pipelines:
           onExecute:
             - branch=$res_GitHub_headCommitRef
             - echo $branch
+            - printenv | grep res_GitHub_
             - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
-            - add_run_variables result="$branch"
+            - add_run_variables result="jfrog-pipelines"
       
       - name: setPREnvironment
         type: bash
