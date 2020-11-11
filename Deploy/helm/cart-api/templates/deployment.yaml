@@ -24,7 +24,7 @@ spec:
       serviceAccountName: {{ .Values.inf.sa }}
       {{ if .Values.imagePullSecrets -}}
       imagePullSecrets:
-        - name: {{ .values.imagePullSecrets }}
+        - name: {{ .Values.imagePullSecrets.name }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
