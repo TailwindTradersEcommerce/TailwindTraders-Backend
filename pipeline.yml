@@ -167,22 +167,22 @@ pipelines:
           - kubectl label pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-from=$result-tailwindtraders-cart -n $nameSpace --overwrite=true
           - kubectl annotate pods --selector="app=tailwindtraders-cart,release=$result" routing.visualstudio.io/route-on-header=kubernetes-route-as=$result -n $nameSpace --overwrite=true
       
-      - name: addGitHubFQDN
-        type: bash
-        configuration:
-          affinityGroup: cartapi
-          inputResources:
-            - name: GitHub
-          inputSteps:
-            - name: addRoutingLabels
-          environmentVariables:
-            GITHUB_TOKEN: ${res_GitHub_gitProvider_token}
-            GITHUB_OWNER: jldeen
-            GITHUB_REPO: TailwindTraders-Backend
-            GITHUB_COMMENT_TYPE: pr
-            GITHUB_PR_ISSUE_NUMBER: ${res_GitHub_pullRequestNumber}
-        execution:
-          onExecute:
-            - wget https://github.com/cloudposse/github-commenter/releases/download/0.8.0/github-commenter_linux_amd64 -o github-commenter
-            - chmod +x github-commenter
-            - $result.$INGRESS 2>&1 | github-commenter -format "You can see a private version of the changes made in this pull request here `$result.$ingress`<br/>```{{.}}```"
+      # - name: addGitHubFQDN
+      #   type: bash
+      #   configuration:
+      #     affinityGroup: cartapi
+      #     inputResources:
+      #       - name: GitHub
+      #     inputSteps:
+      #       - name: addRoutingLabels
+      #     environmentVariables:
+      #       GITHUB_TOKEN: ${res_GitHub_gitProvider_token}
+      #       GITHUB_OWNER: jldeen
+      #       GITHUB_REPO: TailwindTraders-Backend
+      #       GITHUB_COMMENT_TYPE: pr
+      #       GITHUB_PR_ISSUE_NUMBER: ${res_GitHub_pullRequestNumber}
+      #   execution:
+      #     onExecute:
+      #       - wget https://github.com/cloudposse/github-commenter/releases/download/0.8.0/github-commenter_linux_amd64 -o github-commenter
+      #       - chmod +x github-commenter
+      #       - $result.$INGRESS 2>&1 | github-commenter -format "You can see a private version of the changes made in this pull request here `$result.$ingress`<br/>```{{.}}```"
