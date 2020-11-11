@@ -106,15 +106,19 @@ pipelines:
           onExecute:
             - cd $res_GitHub_resourcePath
             - pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
-            - ls -la
-            - ls -la $res_GitHub_resourcePath/
             - add_run_files $tailwindChartValues values
       
       - name: helmPRInstall
         type: HelmDeploy
         configuration:
           #inherits from bash
-          helmVersion: 3
+          runtime:
+            type: image
+            image:
+              auto:
+                language: node
+                versions:
+                  - "12.18.2"
           releaseName: $result
           chartPath: $tailwindCharts/cart-api
           flags: --set ingress.hosts=$INGRESS,image.repository=jldeen.jfrog.io/images/cart.api,image.tag=${run_number},B2C.clientID=none,B2C.identityMetadata=none,B2C.issuer=none,B2C.policyName=none,B2C.tenantID=none -f $tailwindChartValues
