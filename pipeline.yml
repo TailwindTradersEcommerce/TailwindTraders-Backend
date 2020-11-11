@@ -67,7 +67,8 @@ pipelines:
             - name: dockerPush 
         execution:
           onExecute:
-            - branch=${GITHUB_HEAD_REF::63}
+            - branch=$res_GitHub_branchName
+            - echo $branch
             - branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
             - add_run_variables result="$branch"
       
