@@ -95,7 +95,7 @@ pipelines:
           onExecute:
             - cd $res_GitHub_resourcePath
             - AKS_CLUSTER=$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)
-            - INGRESS=$(az aks show -n $AKS_CLUSTER -g $resourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)"
+            - INGRESS=$(az aks show -n $AKS_CLUSTER -g $resourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)
             - add_run_variables INGRESS=$INGRESS
         
       - name: createHelmGlobalValues
