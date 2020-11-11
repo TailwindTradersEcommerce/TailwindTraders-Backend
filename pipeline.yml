@@ -124,7 +124,8 @@ pipelines:
                   - "12.18.2"
           releaseName: ${result}
           chartPath: ${tailwindCharts}/cart-api
-          valueFilePaths: ${res_GitHub_resourcePath}/${tailwindChartValues}
+          valueFilePaths: 
+              - ${res_GitHub_resourcePath}/${tailwindChartValues}
           flags: --set ingress.hosts=$INGRESS,image.repository=jldeen.jfrog.io/images/cart.api,image.tag=${run_number},B2C.clientID=none,B2C.identityMetadata=none,B2C.issuer=none,B2C.policyName=none,B2C.tenantID=none
           affinityGroup: cartapi
           inputResources:
