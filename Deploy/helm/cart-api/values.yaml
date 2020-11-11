@@ -6,6 +6,9 @@ image:
   tag: prod
   pullPolicy: Always
 
+imagePullSecrets:
+  name: cart
+
 service:
   type: ClusterIP
   port: 80
