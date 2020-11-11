@@ -1,7 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "tt-cart.fullname" . -}}
 {{- $ingressPath := .Values.inf.ingress.cart.path -}}
-{{- $serviceName := .Values.service.name -}}
 
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -34,7 +33,7 @@ spec:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: {{ $serviceName }}
+              serviceName: {{ $fullName }}
               servicePort: http
   {{- end }}
 {{- end }}
