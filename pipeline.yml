@@ -134,7 +134,7 @@ pipelines:
             - name: AKS
         execution:
           onStart:
-            - restore_run_files values $tailwindChartValues
+            - restore_run_files values $res_GitHub_resourcePath/$tailwindChartValues
             - ls -la
 
       - name: addRoutingLabels
