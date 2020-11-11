@@ -9,6 +9,7 @@ image:
 service:
   type: ClusterIP
   port: 80
+  name: cart
 
 resources:
   limits:

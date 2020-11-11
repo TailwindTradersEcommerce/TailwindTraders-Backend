@@ -33,7 +33,7 @@ spec:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: cart
+              serviceName: {{ .Values.service.name }}
               servicePort: http
   {{- end }}
 {{- end }}
