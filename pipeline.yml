@@ -77,14 +77,26 @@ pipelines:
         type: bash
         configuration:
           affinityGroup: cartapi
+          runtime:
+            type: image
+            image:
+              custom:
+                name: jldeen.jfrog.io/images/pwsh
+                tag: "2"
+                registry: Artifactory
+                sourceRepository: images
           inputResources:
             - name: GitHub
           inputSteps:
-            - name: createValidBranchName 
+            - name: setPREnvironment
+          integrations:
+            - name: Azure
         execution:
           onExecute:
-            - ingress="5e6d13db1926415ea94e.eastus.aksapp.io"
-            - add_run_variables INGRESS=$ingress
+            - cd $res_GitHub_resourcePath
+            - AKS_CLUSTER=$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)
+            - INGRESS=$(az aks show -n $AKS_CLUSTER -g $resourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)"
+            - add_run_variables INGRESS=$INGRESS
         
       - name: createHelmGlobalValues
         type: bash
@@ -124,7 +136,7 @@ pipelines:
                   - "12.18.2"
           releaseName: ${result}
           chartPath: ./${tailwindCharts}/cart-api
-          flags: "--namespace twt -f $res_GitHub_resourcePath/$tailwindChartValues --set ingress.hosts=$INGRESS --set image.repository=jldeen.jfrog.io/images/cart.api --set image.tag=${run_number} --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none"
+          flags: "--namespace twt -f $tailwindChartValues --set ingress.hosts=$INGRESS --set image.repository=jldeen.jfrog.io/images/cart.api --set image.tag=${run_number} --set B2C.clientID=none --set B2C.identityMetadata=none --set B2C.issuer=none --set B2C.policyName=none --set B2C.tenantID=none"
           affinityGroup: cartapi
           inputResources:
             - name: GitHub
