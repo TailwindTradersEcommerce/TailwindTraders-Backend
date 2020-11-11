@@ -83,6 +83,7 @@ $tokens.rewardsregistration=If ($rewardsResourceGroup) { $true } Else { $false }
 $appinsightsId=""
 
 ## Getting App Insights instrumentation key, if required
+az config set extension.use_dynamic_install=yes_without_prompt && az extension add --upgrade -n application-insights
 $appInsightsName=$(az resource list -g $resourceGroup --resource-type Microsoft.Insights/components --query [].name -o tsv)
 if (-not [string]::IsNullOrEmpty($appInsightsName)) {
     $appinsightsId=$(az monitor app-insights component show --app $appInsightsName -g $resourceGroup --query instrumentationKey -o tsv)
