@@ -6,8 +6,7 @@ image:
   tag: prod
   pullPolicy: Always
 
-imagePullSecrets:
-  - name: twt
+imagePullSecrets: twt
 
 service:
   type: ClusterIP
