@@ -121,7 +121,7 @@ pipelines:
                 versions:
                   - "12.18.2"
           releaseName: $result
-          chartPath: $tailwindCharts/cart-api
+          chartPath: ${tailwindCharts}/cart-api
           flags: --set ingress.hosts=$INGRESS,image.repository=jldeen.jfrog.io/images/cart.api,image.tag=${run_number},B2C.clientID=none,B2C.identityMetadata=none,B2C.issuer=none,B2C.policyName=none,B2C.tenantID=none -f $tailwindChartValues
           affinityGroup: cartapi
           inputResources:
@@ -156,11 +156,11 @@ pipelines:
           inputSteps:
             - name: addRoutingLabels
           environmentVariables:
-            GITHUB_TOKEN: $res_GitHub_gitProvider_token
+            GITHUB_TOKEN: ${res_GitHub_gitProvider_token}
             GITHUB_OWNER: jldeen
             GITHUB_REPO: TailwindTraders-Backend
             GITHUB_COMMENT_TYPE: pr
-            GITHUB_PR_ISSUE_NUMBER: $res_GitHub_pullRequestNumber
+            GITHUB_PR_ISSUE_NUMBER: ${res_GitHub_pullRequestNumber}
         execution:
           onExecute:
             - wget https://github.com/cloudposse/github-commenter/releases/download/0.8.0/github-commenter_linux_amd64 -o github-commenter
