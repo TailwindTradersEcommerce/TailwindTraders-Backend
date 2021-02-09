@@ -111,6 +111,7 @@ jobs:
 
       - name: Helm Install PR
         run: |
+          ls -la
           helm upgrade --install --namespace  ${{ env.nameSpace }} ${{steps.generate-valid-branch-name.outputs.result}} \
           -f $tailwindChartValues \
           --set ingress.hosts={$INGRESS} \
