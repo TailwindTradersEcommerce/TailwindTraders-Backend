@@ -13,9 +13,9 @@ env:
   nameSpace: twt
 
   # helmchart
-  tailwindChartValuesScript: TailwindTraders-Backend/Deploy/powershell/Generate-Config.ps1
+  tailwindChartValuesScript: Deploy/powershell/Generate-Config.ps1
   tailwindChartValues: values.yaml
-  tailwindCharts: TailwindTraders-Backend/Deploy/helm
+  tailwindCharts: Deploy/helm
 
 jobs:
   build:
