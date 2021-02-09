@@ -94,7 +94,7 @@ jobs:
 
       - name: docker build / push
         run: |
-          docker build Source/Services/Tailwind.Traders.Login.Api/ -t $CONTAINER_REGISTRY/login.api:$GITHUB_SHA
+          docker build -f Source/Services/Tailwind.Traders.Login.Api/Dockerfile Source -t  $CONTAINER_REGISTRY/login.api:$GITHUB_SHA
           docker push $CONTAINER_REGISTRY/login.api:$GITHUB_SHA
 
       - uses: azure/aks-set-context@v1
