@@ -39,13 +39,12 @@ jobs:
           # set for this step
           AKS_CLUSTER=$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)
 
-          acrName=$(az acr list -g $resourceGroup -o tsv --query [0].name)
-          CONTAINER_REGISTRY=$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)
-
           echo "AKS_CLUSTER=$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)" >> $GITHUB_ENV
+
           echo "INGRESS=$(az aks show -n $AKS_CLUSTER -g $resourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)" >> $GITHUB_ENV
           
           echo "Retrieving Container Registry info..."
+          acrName=$(az acr list -g $resourceGroup -o tsv --query [0].name)
           CONTAINER_REGISTRY=$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)
           REGISTRY_USERNAME=$(az acr credential show -n $acrName --query username -o tsv)
           REGISTRY_PASSWORD=$(az acr credential show -n $acrName -o tsv --query passwords[0].value)
@@ -54,8 +53,8 @@ jobs:
           echo "REGISTRY_USERNAME=$(az acr credential show -n $acrName --query username -o tsv)" >> $GITHUB_ENV
           echo "REGISTRY_PASSWORD=$(az acr credential show -n $acrName -o tsv --query passwords[0].value)" >> $GITHUB_ENV
 
-          echo "::add-mask::$REGISTRY_USERNAME"
-          echo "::add-mask::$REGISTRY_PASSWORD"
+          # echo "::add-mask::$REGISTRY_USERNAME"
+          # echo "::add-mask::$REGISTRY_PASSWORD"
 
       - name: "Create Registry Secret"
         uses: jldeen/actions-set-secret@releases/v1
