@@ -33,7 +33,7 @@ spec:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: login
+              serviceName: {{ $fullName }}
               servicePort: http
   {{- end }}
 {{- end }}
