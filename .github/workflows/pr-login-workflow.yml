@@ -114,6 +114,7 @@ jobs:
           helm upgrade --install --namespace  ${{ env.nameSpace }} ${{steps.generate-valid-branch-name.outputs.result}} \
           -f $tailwindChartValues \
           --set ingress.hosts={$INGRESS} \
+          --set metadata.labels.release=${{steps.generate-valid-branch-name.outputs.result}} \
           --set image.repository=$CONTAINER_REGISTRY/login.api \
           --set image.tag=$GITHUB_SHA $tailwindCharts/login-api \
           --set B2C.clientID=none \
