@@ -67,6 +67,7 @@ namespace Tailwind.Traders.Login.Api.Services
                     Token = newRefreshToken
                 });                
             }
+            /// pretend to add in code
             else
             {
                 userName = RetrieveUserFromToken(token);
