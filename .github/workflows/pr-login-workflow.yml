@@ -63,7 +63,7 @@ jobs:
           name: CONTAINER_REGISTRY
           value: ${{ env.CONTAINER_REGISTRY }}
           owner: jldeen
-          repository: azurefridayaci
+          repository: TailwindTraders-Backend
           token: ${{ secrets.REPO_TOKEN }}   
 
       # docker login
@@ -73,7 +73,7 @@ jobs:
           name: REGISTRY_USERNAME
           value: ${{ env.REGISTRY_USERNAME }}
           owner: jldeen
-          repository: azurefridayaci
+          repository: TailwindTraders-Backend
           token: ${{ secrets.REPO_TOKEN }}
 
       - name: "Create Registry Password Secret"
@@ -82,7 +82,7 @@ jobs:
           name: REGISTRY_PASSWORD
           value: ${{ env.REGISTRY_PASSWORD }}
           owner: jldeen
-          repository: azurefridayaci
+          repository: TailwindTraders-Backend
           token: ${{ secrets.REPO_TOKEN }}      
 
       - name: "docker login"
