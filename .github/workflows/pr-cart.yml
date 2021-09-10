@@ -31,7 +31,7 @@ jobs:
 
       - name: "Create Helm gvalues file"
         run: |
-          pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $tailwindChartValues
+          pwsh $tailwindChartValuesScript -resourceGroup $resourceGroup -outputFile $GITHUB_WORKSPACE/$tailwindChartValues
 
       - name: "Set PR Environment"
         run: |
@@ -77,7 +77,7 @@ jobs:
       - name: Helm Install PR
         run: |
           helm upgrade --install --namespace  ${{ env.nameSpace }} ${{steps.generate-valid-namespace-name.outputs.result}} \
-          -f $tailwindChartValues \
+          -f $GITHUB_WORKSPACE/$tailwindChartValues \
           --set ingress.hosts={$INGRESS} \
           --set image.repository=$CONTAINER_REGISTRY/cart.api \
           --set image.tag=$GITHUB_SHA $tailwindCharts/cart-api \
