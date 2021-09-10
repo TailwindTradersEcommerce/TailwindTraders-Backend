@@ -69,6 +69,7 @@ else {
 $appinsightsId=@()
 $appInsightsName=$(az resource list -g $resourceGroup --resource-type Microsoft.Insights/components --query [].name | ConvertFrom-Json)
 if ($appInsightsName) {
+    az config set extension.use_dynamic_install=yes_without_prompt
     $appinsightsConfig=$(az monitor app-insights component show --app $appInsightsName -g $resourceGroup -o json | ConvertFrom-Json)
 
     if ($appinsightsConfig) {
