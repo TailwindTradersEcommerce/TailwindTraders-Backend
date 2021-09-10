@@ -37,15 +37,16 @@ jobs:
         run: |
           # set for this step
           AKS_CLUSTER=$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)
-          echo "::set-env name=AKS_CLUSTER::$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)"
-          echo "::set-env name=INGRESS::$(az aks show -n $AKS_CLUSTER -g $resourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)"
+          # persist env vars
+          echo "AKS_CLUSTER=$(az aks list --resource-group $resourceGroup --query [0].name -o tsv)" >> $GITHUB_ENV
+          echo "INGRESS=$(az aks show -n $AKS_CLUSTER -g $resourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)" >> $GITHUB_ENV
           echo "Retrieving Container Registry info..."
           acrName=$(az acr list -g $resourceGroup -o tsv --query [0].name)
           CONTAINER_REGISTRY=$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)
           # acr/container registry variables
-          echo "::set-env name=CONTAINER_REGISTRY::$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)"
-          echo "::set-env name=REGISTRY_USERNAME::$(az acr credential show -n $acrName --query username -o tsv)"
-          echo "::set-env name=REGISTRY_PASSWORD::$(az acr credential show -n $acrName -o tsv --query passwords[0].value)"
+          echo "CONTAINER_REGISTRY=$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)" >> $GITHUB_ENV
+          echo "REGISTRY_USERNAME=$(az acr credential show -n $acrName --query username -o tsv)" >> $GITHUB_ENV
+          echo "REGISTRY_PASSWORD=$(az acr credential show -n $acrName -o tsv --query passwords[0].value)" >> $GITHUB_ENV
 
       # docker login
       - name: "docker login"
