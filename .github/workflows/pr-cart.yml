@@ -98,3 +98,4 @@ jobs:
           host: "${{ env.INGRESS }}"
           branch-name: ${{steps.generate-valid-namespace-name.outputs.result}}
           protocol: "http"
+          
