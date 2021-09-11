@@ -9,7 +9,7 @@ on:
 
 env:
   # azure
-  resourceGroup: twt2021downgrade
+  resourceGroup: tailwindtraders
   nameSpace: twt
 
   # helmchart
