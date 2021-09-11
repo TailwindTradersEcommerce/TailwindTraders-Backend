@@ -63,6 +63,7 @@ jobs:
       - name: Scan Image for Vulnerabilities
         uses: azure/container-scan@v0
         id: container-scan
+        continue-on-error: true
         with:
           image-name: ${{ env.CONTAINER_REGISTRY }}/cart.api:${{ github.sha }} # loginServerlUrl/ would be empty if it's hosted on dockerhub; ${{ github.sha }} could also be replaced with any desired image tag
           username: ${{ env.REGISTRY_USERNAME }}
