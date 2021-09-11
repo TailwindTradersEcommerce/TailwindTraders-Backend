@@ -1,0 +1,114 @@
+# Template for generating a gvalues file
+
+inf:
+  sa: ttsa
+  db:
+    products:
+      host: https://ttshoppingdbrvb6fhbqhmu6c.documents.azure.com:443/
+      auth: 8Ao54w3QprwCbjdl2ZogvtKRIrGwQhoWspZdmnyfddgHxfzx5d4eppfpDRJAoOAX6mFEWwyFFjPtD44dOec2LQ==
+    profile:
+      host: https://ttshoppingdbrvb6fhbqhmu6c.documents.azure.com:443/
+      auth: 8Ao54w3QprwCbjdl2ZogvtKRIrGwQhoWspZdmnyfddgHxfzx5d4eppfpDRJAoOAX6mFEWwyFFjPtD44dOec2LQ==
+    popularproducts:
+      host: https://ttshoppingdbrvb6fhbqhmu6c.documents.azure.com:443/
+      auth: 8Ao54w3QprwCbjdl2ZogvtKRIrGwQhoWspZdmnyfddgHxfzx5d4eppfpDRJAoOAX6mFEWwyFFjPtD44dOec2LQ==
+    stock:
+      host: https://ttshoppingdbrvb6fhbqhmu6c.documents.azure.com:443/
+      auth: 8Ao54w3QprwCbjdl2ZogvtKRIrGwQhoWspZdmnyfddgHxfzx5d4eppfpDRJAoOAX6mFEWwyFFjPtD44dOec2LQ==
+    cart:
+      host: https://ttshoppingdbrvb6fhbqhmu6c.documents.azure.com:443/
+      auth: 8Ao54w3QprwCbjdl2ZogvtKRIrGwQhoWspZdmnyfddgHxfzx5d4eppfpDRJAoOAX6mFEWwyFFjPtD44dOec2LQ==
+    rewards:
+      host: localdb
+      port: "1433"
+      catalog: rewardsdb
+      user: user
+      pwd: password
+    coupons:
+      user: ttcouponsdbrvb6fhbqhmu6c
+      pwd: TOtTYHVEeI8mmwtQeiIhrTsR22U6eO3kFimMnePcUsFQaNkVYLn3dGvrjTB9Yb5e5ltsvnaVzeKq9DNYG7pjXQ==
+      host: ttcouponsdbrvb6fhbqhmu6c.documents.azure.com
+      port: "10255"
+      dbName: Coupon
+      collection: CouponCollection
+  storage:
+    productimages: https://ttstoragervb6fhbqhmu6c.blob.core.windows.net/product-list
+    productdetailimages: https://ttstoragervb6fhbqhmu6c.blob.core.windows.net/product-detail
+    couponimage: https://ttstoragervb6fhbqhmu6c.blob.core.windows.net/coupon-list
+    profileimages: https://ttstoragervb6fhbqhmu6c.blob.core.windows.net/profiles-list
+  appinsights:
+    id: 6c7895f1-5f59-488a-a918-16c7fc297ca1
+  ingress:
+    products:
+      path: /product-api
+    profile:
+      path: /profile-api
+    coupons:
+      path: /coupons-api
+    popularproducts:
+      path: /popular-products-api
+    stock:
+      path: /stock-api
+    imageclassifier:
+      path: /image-classifier-api
+    mobilebff:
+      path: /mobilebff
+    webbff:
+      path: /webbff
+    login:
+      path: /login-api
+    cart:
+      path: /cart-api
+    rewardsregistration:
+      path: /rewards-registration-api
+  apiurls:
+    popularproductsapiurl: http://popularproducts
+    productsapiurl: http://product 
+    profileapiurl: http://profile
+    couponsapiurl: http://coupons
+    stockapiurl: http://stock
+    imageclassifierapiurl: http://imageclassifier
+    loginapiurl: http://login
+  registrationusers:
+    registerusers: False
+    registrationusersurl: http://rewards-registration/UserService.svc
+
+# Shared ingress configurations
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /
+#  hosts:
+#    - <guid>.<region>.aksapp.io   # NOT NEEDED. SET BY SCRIPTS
+
+  tls:
+  - secretName: chart-example-tls
+    hosts:
+      - chart-example.local
+
+sec:
+  issuer: TTFakeLogin
+  securityKey: nEpLzQJGNSCNL5H6DIQCtTdNxf5VgAGcBbtXLms1YDD01KJBAs0WVawaEjn97uwB
+
+B2C:
+  UseB2C: "false"
+  B2CIssuer: ""
+  Authority: ""
+  tenantID: ""
+  clientID: ""
+  policyName: ""
+  identityMetadata: ""
+  issuer: ""
+
+# Autoscaling global settings
+hpa:
+  activated: false # set to true to deploy HPA for services
+  cpu:
+    averageUtilization: 40 
+  minReplicas: 1
+  maxReplicas: 40
+
