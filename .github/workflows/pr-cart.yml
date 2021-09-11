@@ -64,7 +64,7 @@ jobs:
         uses: azure/container-scan@v0
         id: container-scan
         with:
-          image-name: ${{ env.CONTAINER_REGISTRY }}/cart.api:$GITHUB_SHA # loginServerlUrl/ would be empty if it's hosted on dockerhub; ${{ github.sha }} could also be replaced with any desired image tag
+          image-name: ${{ env.CONTAINER_REGISTRY }}/cart.api:${{ env.GITHUB_SHA }} # loginServerlUrl/ would be empty if it's hosted on dockerhub; ${{ github.sha }} could also be replaced with any desired image tag
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_PASSWORD }}
       
