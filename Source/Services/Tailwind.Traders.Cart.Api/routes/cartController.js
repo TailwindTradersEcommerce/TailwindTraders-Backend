@@ -8,11 +8,12 @@ class CartController {
         return req.headers["x-tt-name"];
     }
 
+    // gnome
     async addProduct(req, res) {
         const item = req.body;
         const doc = await this.shoppingCartDao.addItem(item);
         res.status(201).send({ message: `${doc.detailProduct.name} added to shopping cart`, id: doc.id });
-        console.log(`Succsessfully added product ${doc.detailProduct.name} to shopping cart`)
+        console.log(`Succsessfull added product ${doc.detailProduct.name} to shopping cart`)
     }
 
     async getProductsByUser(req, res) {
